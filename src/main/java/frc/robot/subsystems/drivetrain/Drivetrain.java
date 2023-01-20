@@ -7,9 +7,12 @@ import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,16 +21,20 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase{
     SwerveModule[] swerveModules;
-    SwerveDriveKinematics driveKinematics;
+    SwerveDriveKinematics driveKinematics = new SwerveDriveKinematics(moduleOffset);
     SwerveDriveOdometry driveOdometry;
+
     static WPI_PigeonIMU imu = new WPI_PigeonIMU(00);
 
     public SwerveModule frontLeft;
     public SwerveModule frontRight;
     public SwerveModule backLeft;
     public SwerveModule backRight;
+    SwerveModulePosition[]  modulePositions = {new SwerveModulePosition()};
+    
+     public final SwerveDriveOdometry m_Odometry = new SwerveDriveOdometry(
+        driveKinematics, imu.getRotation2d(), modulePositions);
 
-    //SwerveDriveKinematics m_Kinematics = new SwerveDriveKinematics(m_front);
     
 
    // SwerveModule[] swerveModules; //0 is LF, 1 is LB, 2 is RF etc
@@ -39,21 +46,12 @@ public class Drivetrain extends SubsystemBase{
             new SwerveModule(RF_DRIVE_MOTOR_PORT, RF_STEER_MOTOR_PORT , RF_ANGLE_ENCODER_PORT, 104.238, false),
             new SwerveModule(RB_DRIVE_MOTOR_PORT, RB_STEER_MOTOR_PORT , RB_ANGLE_ENCODER_PORT, 147.304, false) //TODO simplify later
         };
+
+        driveOdometry = new SwerveDriveOdometry(driveKinematics, imu.getRotation2d(), modulePositions, new Pose2d()); 
+
     }
 
-    /* 
-        public final SwerveDriveOdometry m_Odometry = new SwerveDriveOdometry(
-            m_kinematics, null, null)
-
-
-        driveKinematics = new SwerveDriveKinematics(moduleOffset);
-
-
-        driveOdometry = new SwerveDriveOdometry(driveKinematics, imu.getRotation2d(), , new Pose2d());
-        
-        }
-
-    */
+    
     @Override 
     public void periodic(){
         SwerveModuleState[] measuredModuleStates = new SwerveModuleState[4];
@@ -71,6 +69,8 @@ public class Drivetrain extends SubsystemBase{
         //driveOdometry.updateWithTime(Timer.getFPGATimestamp(), imu.getRotation2d(), measuredModuleStates);
     
     }
+        
+
     public void drive(double xVelocity, double yVelocity, double angularVelocity, boolean isFieldRelative){
         SwerveModuleState[] moduleStates;
         ChassisSpeeds robotSpeed;
@@ -110,7 +110,8 @@ public static double deadZone (double input){
      } else if(input<0) {
          return -((1.0/0.64)*(0.8*input-0.2)*(0.8*input-0.2));
      } return ((1.0/0.64)*(0.8*input-0.2)*(0.8*input-0.2));
- }    
+ } 
+   
 
 /*if(Math.abs(input) < 0.2){ // <0.15
     return 0;
@@ -118,6 +119,5 @@ public static double deadZone (double input){
     return -(1.25*input + 0.2);
 } return (1.25*input + 0.2);
 } */   
-
 
 }

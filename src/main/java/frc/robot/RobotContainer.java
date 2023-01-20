@@ -19,6 +19,7 @@ import frc.robot.commands.ClimberOut;
 import frc.robot.commands.CloseHook;
 import frc.robot.commands.FeedBall;
 import frc.robot.commands.FeedBallForShooter;
+import frc.robot.commands.FollowTarget;
 import frc.robot.commands.IntakeBall;
 import frc.robot.commands.IntakeIn;
 import frc.robot.commands.IntakeOut;
@@ -126,9 +127,12 @@ public class RobotContainer {
     */
 
     buttonA.onTrue(
-      new RunCommand(()-> drivetrain.drive(0, 0,  m_limelight.getTX() * 0.3, false)));
-      
+      new RunCommand(()-> drivetrain.drive(0, 0,  m_limelight.getTX() * 0.03, false)));
+    Abutton.onTrue(new FollowTarget(drivetrain, m_limelight::getTX));
+
   }
+
+  
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
