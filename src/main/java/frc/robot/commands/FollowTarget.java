@@ -28,7 +28,7 @@ public class FollowTarget extends CommandBase {
   @Override
   public void execute() {
     double lols = m_Offset.getAsDouble();
-    m_Drivetrain.drive(0, 0, 0.3*lols, false);
+    m_Drivetrain.drive(0, 0, 0.03*lols, false);
   }
 
   // Called once the command ends or is interrupted.

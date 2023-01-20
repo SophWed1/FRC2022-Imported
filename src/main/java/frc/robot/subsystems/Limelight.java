@@ -16,21 +16,50 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class Limelight extends SubsystemBase {
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-NetworkTableEntry tx = table.getEntry("tx");
-NetworkTableEntry ty = table.getEntry("ty");
-NetworkTableEntry ta = table.getEntry("ta");
+  NetworkTableEntry tx = table.getEntry("tx");
+  NetworkTableEntry ty = table.getEntry("ty");
+  NetworkTableEntry ta = table.getEntry("ta");
+
+  double x = tx.getDouble(0.0);
+  double y = ty.getDouble(0.0);
+  double area = ta.getDouble(0.0);
 
   /** Creates a new Limelight. */
-  public Limelight() {}
+  public Limelight() {   
+  }
 
   @Override
   public void periodic() {
-    double x = tx.getDouble(0.0);
-    double y = ty.getDouble(0.0);
-    double area = ta.getDouble(0.0);
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("LimelightX", x);
-    SmartDashboard.putNumber("LimelightY", y);
-    SmartDashboard.putNumber("LimelightArea", area);
+    
+  SmartDashboard.putNumber("LimelightX", x);
+  SmartDashboard.putNumber("LimelightY", y);
+  SmartDashboard.putNumber("LimelightArea", area);
   }
+
+  public double getTX(){
+    System.out.println(x);
+    return x;
+  }
+
+  
 }
+
+/*
+ * NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+double tv = table.getEntry("tv").getDouble(0);
+double tx = table.getEntry("tx").getDouble(0);
+
+double steering_adjust = 0.0;
+if (tv == 0.0) {
+        // We don't see the target, seek for the target by spinning in place at a safe speed.
+        steering_adjust = 0.3;
+} else {
+        // We do see the target, execute aiming code
+        double heading_error = tx;
+        steering_adjust = Kp * tx;
+}
+
+left_command += steering_adjust;
+right_command -= steering_adjust;
+ */
