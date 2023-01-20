@@ -38,6 +38,7 @@ import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.drivetrain.Drivetrain;
+import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -59,6 +60,7 @@ public class RobotContainer {
   private final Shooter m_shooter = new Shooter();
   private final Intake m_intake = new Intake();
   private final Climber m_climber = new Climber();
+  private final Limelight m_limelight = new Limelight();
  
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -113,6 +115,7 @@ public class RobotContainer {
     final JoystickButton BumperRight = new JoystickButton(driverController,6);
     final JoystickButton leftStartButtonDriver = new JoystickButton(driverController,7);
     
+    /* 
     buttonY.whenPressed(() -> drivetrain.resetGyro(),drivetrain); 
     buttonB.whileHeld(new ClimberOut(m_climber));
     //buttonX.whenPressed(new ClimberIn(m_climber));
@@ -120,6 +123,11 @@ public class RobotContainer {
     //BumperRight.whileHeld(new CloseHook(m_climber));
     buttonA.whileHeld(new ClimbRobot(m_climber));
     leftStartButtonDriver.whileHeld(new ReverseClimb(m_climber));
+    */
+
+    buttonA.onTrue(
+      new RunCommand(()-> drivetrain.drive(0, 0,  m_limelight.getTX() * 0.3, false)));
+      
   }
 
   /**
